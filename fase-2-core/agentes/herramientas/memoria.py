@@ -1,34 +1,39 @@
 from memoria.repositorio import guardar_conocimiento, buscar_conocimiento
 
-# Definición de herramientas para Claude (formato tool use de Anthropic)
 HERRAMIENTAS = [
     {
-        "name": "guardar_en_memoria",
-        "description": "Guarda un hecho, nota o conocimiento importante en la base de datos persistente de JARVIS. Úsalo cuando el usuario quiera que recuerdes algo para el futuro.",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "titulo": {"type": "string", "description": "Título breve del conocimiento"},
-                "contenido": {"type": "string", "description": "Contenido completo a guardar"},
-                "etiquetas": {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "description": "Etiquetas para categorizar (ej: ['python', 'arquitectura'])"
+        "type": "function",
+        "function": {
+            "name": "guardar_en_memoria",
+            "description": "Guarda un hecho, nota o conocimiento importante en la base de datos persistente de JARVIS. Úsalo cuando el usuario quiera que recuerdes algo.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "titulo": {"type": "string", "description": "Título breve del conocimiento"},
+                    "contenido": {"type": "string", "description": "Contenido completo a guardar"},
+                    "etiquetas": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Etiquetas para categorizar (ej: ['python', 'arquitectura'])"
+                    },
                 },
+                "required": ["titulo", "contenido"],
             },
-            "required": ["titulo", "contenido"],
         },
     },
     {
-        "name": "buscar_en_memoria",
-        "description": "Busca en la memoria persistente de JARVIS usando palabras clave. Úsalo cuando necesites recordar información guardada anteriormente.",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "consulta": {"type": "string", "description": "Términos de búsqueda"},
-                "limite": {"type": "integer", "description": "Máximo de resultados (default: 5)", "default": 5},
+        "type": "function",
+        "function": {
+            "name": "buscar_en_memoria",
+            "description": "Busca en la memoria persistente de JARVIS usando palabras clave.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "consulta": {"type": "string", "description": "Términos de búsqueda"},
+                    "limite": {"type": "integer", "description": "Máximo de resultados (default: 5)"},
+                },
+                "required": ["consulta"],
             },
-            "required": ["consulta"],
         },
     },
 ]
@@ -50,9 +55,6 @@ async def ejecutar(nombre: str, parametros: dict) -> str:
         )
         if not resultados:
             return "No encontré nada relacionado en la memoria."
-        return "\n\n".join(
-            f"**{r['titulo']}**\n{r['contenido']}"
-            for r in resultados
-        )
+        return "\n\n".join(f"**{r['titulo']}**\n{r['contenido']}" for r in resultados)
 
     return f"Herramienta desconocida: {nombre}"

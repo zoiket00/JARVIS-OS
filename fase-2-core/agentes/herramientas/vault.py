@@ -1,28 +1,33 @@
-import os
 from pathlib import Path
 from config import obtener_config
 
 HERRAMIENTAS = [
     {
-        "name": "leer_nota_vault",
-        "description": "Lee el contenido de una nota del vault de Obsidian (base de conocimiento de JARVIS). Úsalo para consultar información almacenada en el vault.",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "ruta": {"type": "string", "description": "Ruta relativa de la nota dentro del vault (ej: 'wiki/concepts/transformers.md')"},
+        "type": "function",
+        "function": {
+            "name": "leer_nota_vault",
+            "description": "Lee el contenido de una nota del vault de Obsidian (base de conocimiento de JARVIS).",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "ruta": {"type": "string", "description": "Ruta relativa de la nota (ej: 'wiki/concepts/transformers.md')"},
+                },
+                "required": ["ruta"],
             },
-            "required": ["ruta"],
         },
     },
     {
-        "name": "listar_vault",
-        "description": "Lista las notas disponibles en una carpeta del vault de Obsidian.",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "carpeta": {"type": "string", "description": "Carpeta a listar (ej: 'wiki/concepts'). Vacío para la raíz.", "default": ""},
+        "type": "function",
+        "function": {
+            "name": "listar_vault",
+            "description": "Lista las notas disponibles en una carpeta del vault de Obsidian.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "carpeta": {"type": "string", "description": "Carpeta a listar (ej: 'wiki/concepts'). Vacío para la raíz."},
+                },
+                "required": [],
             },
-            "required": [],
         },
     },
 ]
@@ -36,7 +41,7 @@ async def ejecutar(nombre: str, parametros: dict) -> str:
         ruta_nota = vault / parametros["ruta"]
         if not ruta_nota.exists():
             return f"Nota no encontrada: {parametros['ruta']}"
-        if not ruta_nota.is_relative_to(vault):
+        if not ruta_nota.resolve().is_relative_to(vault.resolve()):
             return "Acceso denegado: ruta fuera del vault."
         return ruta_nota.read_text(encoding="utf-8")
 

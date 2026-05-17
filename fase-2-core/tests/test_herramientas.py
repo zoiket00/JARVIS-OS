@@ -4,7 +4,7 @@ from agentes.herramientas import vault
 
 
 def test_herramientas_registradas():
-    nombres = {h["name"] for h in TODAS}
+    nombres = {h["function"]["name"] for h in TODAS}
     assert "guardar_en_memoria" in nombres
     assert "buscar_en_memoria" in nombres
     assert "leer_nota_vault" in nombres
@@ -13,8 +13,9 @@ def test_herramientas_registradas():
 
 def test_cada_herramienta_tiene_descripcion():
     for herramienta in TODAS:
-        assert herramienta.get("description"), f"{herramienta['name']} sin descripción"
-        assert herramienta.get("input_schema"), f"{herramienta['name']} sin esquema"
+        fn = herramienta["function"]
+        assert fn.get("description"), f"{fn['name']} sin descripción"
+        assert fn.get("parameters"), f"{fn['name']} sin esquema"
 
 
 @pytest.mark.asyncio

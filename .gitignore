@@ -216,3 +216,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# JARVIS-OS — datos locales (no commitear)
+jarvis_memoria.db
+jarvis_vectores/
+*.db

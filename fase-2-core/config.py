@@ -25,8 +25,8 @@ class Configuracion(BaseSettings):
     redis_puerto: int = 6379
     redis_db: int = 0
 
-    anthropic_api_key: str = ""
-    modelo_claude: str = "claude-sonnet-4-6"
+    groq_api_key: str = ""
+    modelo: str = "llama-3.3-70b-versatile"
     max_tokens: int = 8192
 
     vault_ruta: str = r"c:\Claude - Obsidian\Dios de la IA"
