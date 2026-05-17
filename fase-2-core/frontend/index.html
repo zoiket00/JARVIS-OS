@@ -100,31 +100,39 @@ header::before{
   opacity:.3;
 }
 
-.logo{display:flex;align-items:center;gap:16px;}
+.logo{display:flex;align-items:center;gap:18px;}
 
-.logo-box{
-  width:38px;height:38px;border-radius:6px;
-  border:1px solid var(--p2);
-  display:flex;align-items:center;justify-content:center;
-  font-size:17px;font-weight:bold;
-  color:var(--p);text-shadow:0 0 14px var(--p);
-  background:rgba(0,255,136,.05);
-  box-shadow:0 0 20px var(--gl),inset 0 0 20px rgba(0,255,136,.05);
-  position:relative;overflow:hidden;
-}
-.logo-box::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,.07) 0%,transparent 50%);
+/* SVG hex icon */
+.logo-hex{
+  flex-shrink:0;
+  filter:drop-shadow(0 0 8px rgba(0,255,136,.55)) drop-shadow(0 0 20px rgba(0,255,136,.2));
 }
 
-.logo-wordmark{font-size:22px;letter-spacing:8px;color:var(--p);text-shadow:0 0 18px var(--gl2);position:relative;}
-.logo-wordmark::before,.logo-wordmark::after{content:attr(data-t);position:absolute;top:0;left:0;width:100%;pointer-events:none;}
-.logo-wordmark::before{color:#ff0066;animation:ga 8s infinite steps(1);clip-path:polygon(0 18%,100% 18%,100% 42%,0 42%);transform:translateX(-2px);}
-.logo-wordmark::after{color:#00e5ff;animation:gb 8s infinite steps(1);clip-path:polygon(0 56%,100% 56%,100% 80%,0 80%);transform:translateX(2px);}
+/* wordmark */
+.logo-wm{display:flex;flex-direction:column;gap:5px;}
+.logo-primary{display:flex;align-items:baseline;gap:10px;}
+.lp-name{
+  font-size:22px;letter-spacing:9px;
+  color:var(--p);text-shadow:0 0 22px var(--gl2);
+  position:relative;
+}
+/* glitch on name */
+.lp-name::before,.lp-name::after{content:attr(data-t);position:absolute;top:0;left:0;width:100%;pointer-events:none;}
+.lp-name::before{color:#ff0066;animation:ga 8s infinite steps(1);clip-path:polygon(0 18%,100% 18%,100% 44%,0 44%);transform:translateX(-2px);}
+.lp-name::after{color:#00e5ff;animation:gb 8s infinite steps(1);clip-path:polygon(0 56%,100% 56%,100% 80%,0 80%);transform:translateX(2px);}
 @keyframes ga{0%,88%,100%{opacity:0;}89%,92%{opacity:1;transform:translateX(-3px);}90%,91%{transform:translateX(5px);}}
 @keyframes gb{0%,90%,100%{opacity:0;}91%,94%{opacity:1;transform:translateX(2px);}92%,93%{transform:translateX(-4px);}}
 
-.logo-sub{font-size:8px;letter-spacing:4px;color:var(--tl);margin-top:3px;}
+.lp-badge{
+  font-size:8px;letter-spacing:3px;
+  color:var(--cy);
+  border:1px solid rgba(0,224,255,.4);
+  padding:3px 7px;
+  text-shadow:0 0 8px rgba(0,224,255,.5);
+  position:relative;top:-2px;
+  background:rgba(0,224,255,.04);
+}
+.logo-tag{font-size:7px;letter-spacing:5px;color:var(--tl);text-transform:uppercase;}
 
 .hud{display:flex;align-items:center;gap:1px;}
 .hchip{
@@ -153,11 +161,6 @@ header::before{
   background:rgba(3,10,4,.7);
   display:flex;flex-direction:column;
   overflow:hidden;
-}
-
-.sb-brand{
-  padding:16px;border-bottom:1px solid var(--br);
-  font-size:8px;letter-spacing:3px;color:var(--tl);
 }
 
 .sb-section{padding:14px 16px;border-bottom:1px solid var(--br);}
@@ -382,10 +385,31 @@ header::before{
 <div id="app">
   <header>
     <div class="logo">
-      <div class="logo-box">J</div>
-      <div>
-        <div class="logo-wordmark" data-t="JARVIS-OS">JARVIS-OS</div>
-        <div class="logo-sub">SISTEMA DE INTELIGENCIA PERSONAL</div>
+      <!-- Hexagon icon -->
+      <svg class="logo-hex" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="jglow" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="2.5" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- outer hex -->
+        <path d="M24 2L44 13.5V34.5L24 46L4 34.5V13.5Z" stroke="#00ff88" stroke-width="1" stroke-opacity=".55"/>
+        <!-- inner hex -->
+        <path d="M24 9L38 17.5V32.5L24 41L10 32.5V17.5Z" fill="rgba(0,255,136,.07)" stroke="#00ff88" stroke-width=".5" stroke-opacity=".3"/>
+        <!-- top-right corner tick -->
+        <line x1="34" y1="8" x2="40" y2="8" stroke="#00ff88" stroke-width="1" stroke-opacity=".6"/>
+        <line x1="40" y1="8" x2="40" y2="14" stroke="#00ff88" stroke-width="1" stroke-opacity=".6"/>
+        <!-- J glyph -->
+        <text x="24" y="30" text-anchor="middle" fill="#00ff88" font-family="Courier New,monospace" font-size="16" font-weight="bold" filter="url(#jglow)">J</text>
+      </svg>
+
+      <div class="logo-wm">
+        <div class="logo-primary">
+          <span class="lp-name" data-t="JARVIS">JARVIS</span>
+          <span class="lp-badge">OS</span>
+        </div>
+        <div class="logo-tag">Sistema de Inteligencia Personal</div>
       </div>
     </div>
     <div class="hud">
@@ -398,8 +422,6 @@ header::before{
   <div class="workspace">
     <!-- SIDEBAR -->
     <div id="sidebar">
-      <div class="sb-brand">JARVIS · NÚCLEO v0.3</div>
-
       <div class="sb-section">
         <h4>SISTEMA</h4>
         <div class="sb-row"><span class="sb-k">ESTADO</span><span class="sb-v" id="sb-est">—</span></div>
