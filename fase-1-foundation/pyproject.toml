@@ -1,7 +1,7 @@
 [project]
-name = "jarvis-os-foundation"
+name = "jarvis-os-fundacion"
 version = "0.1.0"
-description = "JARVIS-OS FASE 1 — Foundation: infrastructure, config, memory base"
+description = "JARVIS-OS FASE 1 — Fundación: infraestructura, configuración, base de memoria"
 requires-python = ">=3.13"
 dependencies = [
     "anthropic>=0.49.0",

@@ -5,29 +5,29 @@ import json
 from datetime import datetime, timezone
 
 
-class JSONFormatter(logging.Formatter):
+class FormateadorJSON(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
-        log: dict[str, Any] = {
+        entrada: dict[str, Any] = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
-            "level": record.levelname,
+            "nivel": record.levelname,
             "logger": record.name,
-            "message": record.getMessage(),
+            "mensaje": record.getMessage(),
         }
         if record.exc_info:
-            log["exception"] = self.formatException(record.exc_info)
+            entrada["excepcion"] = self.formatException(record.exc_info)
         if hasattr(record, "extra"):
-            log.update(record.extra)
-        return json.dumps(log, ensure_ascii=False)
+            entrada.update(record.extra)
+        return json.dumps(entrada, ensure_ascii=False)
 
 
-def get_logger(name: str) -> logging.Logger:
-    logger = logging.getLogger(name)
+def obtener_logger(nombre: str) -> logging.Logger:
+    logger = logging.getLogger(nombre)
     if logger.handlers:
         return logger
 
     logger.setLevel(logging.DEBUG)
-    handler = logging.StreamHandler(sys.stdout)
-    handler.setFormatter(JSONFormatter())
-    logger.addHandler(handler)
+    manejador = logging.StreamHandler(sys.stdout)
+    manejador.setFormatter(FormateadorJSON())
+    logger.addHandler(manejador)
     logger.propagate = False
     return logger

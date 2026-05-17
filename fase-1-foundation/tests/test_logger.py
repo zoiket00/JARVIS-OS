@@ -1,28 +1,28 @@
 import json
 import logging
 from io import StringIO
-from shared.logger import get_logger, JSONFormatter
+from shared.logger import obtener_logger, FormateadorJSON
 
 
-def test_json_output_format():
-    stream = StringIO()
-    handler = logging.StreamHandler(stream)
-    handler.setFormatter(JSONFormatter())
-    logger = logging.getLogger("test_json")
-    logger.addHandler(handler)
+def test_formato_salida_json():
+    flujo = StringIO()
+    manejador = logging.StreamHandler(flujo)
+    manejador.setFormatter(FormateadorJSON())
+    logger = logging.getLogger("prueba_json")
+    logger.addHandler(manejador)
     logger.setLevel(logging.DEBUG)
     logger.propagate = False
 
-    logger.info("hello world")
-    output = stream.getvalue()
-    data = json.loads(output)
+    logger.info("hola mundo")
+    salida = flujo.getvalue()
+    datos = json.loads(salida)
 
-    assert data["level"] == "INFO"
-    assert data["message"] == "hello world"
-    assert "timestamp" in data
+    assert datos["nivel"] == "INFO"
+    assert datos["mensaje"] == "hola mundo"
+    assert "timestamp" in datos
 
 
-def test_get_logger_returns_same_instance():
-    a = get_logger("jarvis.test")
-    b = get_logger("jarvis.test")
+def test_misma_instancia_logger():
+    a = obtener_logger("jarvis.prueba")
+    b = obtener_logger("jarvis.prueba")
     assert a is b

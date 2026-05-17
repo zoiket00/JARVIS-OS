@@ -1,37 +1,37 @@
--- JARVIS-OS — Database initialization
+-- JARVIS-OS — Inicialización de base de datos
 CREATE EXTENSION IF NOT EXISTS vector;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- Conversations: persisted memory across sessions
-CREATE TABLE IF NOT EXISTS conversations (
+-- Conversaciones: memoria persistente entre sesiones
+CREATE TABLE IF NOT EXISTS conversaciones (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    session_id TEXT NOT NULL,
-    role TEXT NOT NULL CHECK (role IN ('user', 'assistant', 'system')),
-    content TEXT NOT NULL,
-    metadata JSONB DEFAULT '{}',
+    sesion_id TEXT NOT NULL,
+    rol TEXT NOT NULL CHECK (rol IN ('usuario', 'asistente', 'sistema')),
+    contenido TEXT NOT NULL,
+    metadatos JSONB DEFAULT '{}',
     embedding vector(1536),
-    created_at TIMESTAMPTZ DEFAULT NOW()
+    creado_en TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Knowledge nodes: structured information
-CREATE TABLE IF NOT EXISTS knowledge_nodes (
+-- Nodos de conocimiento: información estructurada
+CREATE TABLE IF NOT EXISTS nodos_conocimiento (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    title TEXT NOT NULL,
-    content TEXT NOT NULL,
-    source TEXT,
-    tags TEXT[] DEFAULT '{}',
+    titulo TEXT NOT NULL,
+    contenido TEXT NOT NULL,
+    fuente TEXT,
+    etiquetas TEXT[] DEFAULT '{}',
     embedding vector(1536),
-    metadata JSONB DEFAULT '{}',
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
+    metadatos JSONB DEFAULT '{}',
+    creado_en TIMESTAMPTZ DEFAULT NOW(),
+    actualizado_en TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Indexes for vector similarity search
-CREATE INDEX IF NOT EXISTS idx_conversations_embedding
-    ON conversations USING hnsw (embedding vector_cosine_ops);
+-- Índices para búsqueda vectorial por similitud (HNSW)
+CREATE INDEX IF NOT EXISTS idx_conversaciones_embedding
+    ON conversaciones USING hnsw (embedding vector_cosine_ops);
 
-CREATE INDEX IF NOT EXISTS idx_knowledge_embedding
-    ON knowledge_nodes USING hnsw (embedding vector_cosine_ops);
+CREATE INDEX IF NOT EXISTS idx_conocimiento_embedding
+    ON nodos_conocimiento USING hnsw (embedding vector_cosine_ops);
 
-CREATE INDEX IF NOT EXISTS idx_conversations_session
-    ON conversations (session_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_conversaciones_sesion
+    ON conversaciones (sesion_id, creado_en DESC);
