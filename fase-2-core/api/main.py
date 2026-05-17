@@ -1,11 +1,17 @@
 from contextlib import asynccontextmanager
+from pathlib import Path
 from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import uuid
 
 from agentes.jarvis import procesar
 from memoria.repositorio import obtener_pool, cerrar_pool
 from config import obtener_config
+
+FRONTEND = Path(__file__).parent.parent / "frontend"
 
 
 @asynccontextmanager
@@ -22,6 +28,13 @@ app = FastAPI(
     lifespan=ciclo_de_vida,
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 class SolicitudChat(BaseModel):
     mensaje: str
@@ -31,6 +44,11 @@ class SolicitudChat(BaseModel):
 class RespuestaChat(BaseModel):
     respuesta: str
     sesion_id: str
+
+
+@app.get("/", include_in_schema=False)
+async def frontend():
+    return FileResponse(FRONTEND / "index.html")
 
 
 @app.get("/salud")
@@ -79,3 +97,7 @@ async def indexar(background_tasks: BackgroundTasks, reiniciar: bool = False):
 async def estado_rag():
     from rag.buscador import total_notas_indexadas
     return {"notas_indexadas": total_notas_indexadas()}
+
+
+if FRONTEND.exists():
+    app.mount("/static", StaticFiles(directory=FRONTEND), name="static")
